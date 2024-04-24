@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<go-plugin id="bitbucket-pull-request-builder" version="1">
+    <about>
+        <name>Bitbucket Pull Request Builder plugin</name>
+        <version>1.0</version>
+        <target-go-version>20.9.0</target-go-version>
+        <description>Provides ability to build Pull Requests for Bitbucket repository</description>
+        <vendor>
+            <name>Supreeth</name>
+            <url>https://github.com/ashwanthkumar/gocd-build-github-pull-requests</url>
+        </vendor>
+    </about>
+</go-plugin>
