@@ -30,6 +30,5 @@ public class BranchFilter {
             return false;
         }
     }
-
 }
 

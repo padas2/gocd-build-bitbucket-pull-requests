@@ -1,4 +1,4 @@
-package com.inframarket.plugins;
+package com.inframarket.plugins.views;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import com.inframarket.plugins.utils.BranchFilter;
 import com.inframarket.plugins.utils.FieldFactory;
 
-public class DefaultScmConfigurationView {
+public class DefaultScmConfigurationView implements ConfigurationView {
     public String templateName() {
         return "/views/scm.template.html";
     }

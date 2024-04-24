@@ -1,5 +1,9 @@
 package com.inframarket.plugins;
 
+import com.inframarket.plugins.utils.PluginUtils;
+import com.inframarket.plugins.views.ConfigurationView;
+import com.inframarket.plugins.views.DefaultGeneralPluginConfigurationView;
+import com.inframarket.plugins.views.DefaultScmConfigurationView;
 import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
 import com.thoughtworks.go.plugin.api.GoPlugin;
 import com.thoughtworks.go.plugin.api.GoPluginIdentifier;
@@ -31,21 +35,21 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
     public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) throws UnhandledRequestTypeException {
         LOGGER.info("Api request type : "  + goPluginApiRequest.requestName());
         switch (goPluginApiRequest.requestName()) {
-            case "go.plugin-settings.get-configuration" :
+            case Constants.GET_PLUGIN_CONFIGURATION:
                 return handlePluginSettingsGetConfiguration(goPluginApiRequest);
-            case "go.plugin-settings.get-view" :
+            case Constants.GET_PLUGIN_VIEW:
                 try {
                     return handlePluginSettingsGetView(goPluginApiRequest);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            case "scm-configuration":
+            case Constants.SCM_CONFIGURATION:
                 try {
                     return handleScmConfiguration(goPluginApiRequest);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            case "scm-view":
+            case Constants.SCM_VIEW:
                 try {
                     return handleScmView(goPluginApiRequest);
                 } catch (IOException e) {
@@ -61,19 +65,14 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
     }
 
     private GoPluginApiResponse handlePluginSettingsGetConfiguration(GoPluginApiRequest goPluginApiRequest) {
-        return getPluginConfiguration(new DefaultGeneralPluginConfigurationView());
-    }
-
-    private GoPluginApiResponse getPluginConfiguration(DefaultGeneralPluginConfigurationView view) {
-        Map<String, Object> response = view.fields();
-        return renderJSON(200, response);
+        return PluginUtils.getPluginConfiguration(new DefaultGeneralPluginConfigurationView());
     }
 
     private GoPluginApiResponse handlePluginSettingsGetView(GoPluginApiRequest goPluginApiRequest) throws IOException {
         return getPluginView(new DefaultGeneralPluginConfigurationView());
     }
 
-    private GoPluginApiResponse getPluginView(DefaultGeneralPluginConfigurationView view) throws IOException {
+    private GoPluginApiResponse getPluginView(ConfigurationView view) throws IOException {
         if (view.hasConfigurationView()) {
             Map<String, Object> response = new HashMap<String, Object>();
             response.put("displayValue", "bitbucket");
@@ -88,24 +87,8 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
         return getPluginView(new DefaultScmConfigurationView());
     }
 
-    private GoPluginApiResponse getPluginView(DefaultScmConfigurationView view) throws IOException {
-        if (view.hasConfigurationView()) {
-            Map<String, Object> response = new HashMap<String, Object>();
-            response.put("displayValue", "bitbucket");
-            response.put("template", getFileContents(view.templateName()));
-            return renderJSON(200, response);
-        } else {
-            return renderJSON(404, null);
-        }
-    }
-
     private GoPluginApiResponse handleScmConfiguration(GoPluginApiRequest goPluginApiRequest) throws IOException {
-        return getPluginConfiguration(new DefaultScmConfigurationView());
-    }
-
-    private GoPluginApiResponse getPluginConfiguration(DefaultScmConfigurationView view) {
-        Map<String, Object> response = view.fields();
-        return renderJSON(200, response);
+        return PluginUtils.getPluginConfiguration(new DefaultScmConfigurationView());
     }
 
     private String getFileContents(String filePath) throws IOException {

@@ -1,9 +1,9 @@
-package com.inframarket.plugins;
+package com.inframarket.plugins.views;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultGeneralPluginConfigurationView {
+public class DefaultGeneralPluginConfigurationView implements ConfigurationView {
     public String templateName() {
         return "/views/scm.template.html";
     }
