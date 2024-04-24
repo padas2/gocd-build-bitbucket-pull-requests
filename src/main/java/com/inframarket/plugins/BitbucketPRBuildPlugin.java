@@ -1,5 +1,7 @@
 package com.inframarket.plugins;
 
+import com.inframarket.plugins.executor.ExecutorFactory;
+import com.inframarket.plugins.executor.PluginConfigurationExecutor;
 import com.inframarket.plugins.utils.PluginUtils;
 import com.inframarket.plugins.views.ConfigurationView;
 import com.inframarket.plugins.views.DefaultGeneralPluginConfigurationView;
@@ -23,35 +25,43 @@ import static com.inframarket.plugins.utils.GocdUtils.renderJSON;
 
 @Extension
 public class BitbucketPRBuildPlugin implements GoPlugin {
-    private static Logger LOGGER = Logger.getLoggerFor(BitbucketPRBuildPlugin.class);
+    private ExecutorFactory executorFactory;
+
+    private static final Logger LOGGER = Logger.getLoggerFor(BitbucketPRBuildPlugin.class);
     private GoApplicationAccessor goApplicationAccessor;
 
     @Override
     public void initializeGoApplicationAccessor(GoApplicationAccessor goApplicationAccessor) {
         this.goApplicationAccessor = goApplicationAccessor;
+        this.executorFactory = new ExecutorFactory
+                .ExecutorFactoryBuilder()
+                .AddExecutor(Constants.GET_PLUGIN_CONFIGURATION, new PluginConfigurationExecutor())
+                .build();
     }
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) throws UnhandledRequestTypeException {
         LOGGER.info("Api request type : "  + goPluginApiRequest.requestName());
         switch (goPluginApiRequest.requestName()) {
+//            case Constants.GET_PLUGIN_CONFIGURATION:
+//                return handlePluginSettingsGetConfiguration();
             case Constants.GET_PLUGIN_CONFIGURATION:
-                return handlePluginSettingsGetConfiguration(goPluginApiRequest);
+                return this.executorFactory.Execute(goPluginApiRequest);
             case Constants.GET_PLUGIN_VIEW:
                 try {
-                    return handlePluginSettingsGetView(goPluginApiRequest);
+                    return handlePluginSettingsGetView();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             case Constants.SCM_CONFIGURATION:
                 try {
-                    return handleScmConfiguration(goPluginApiRequest);
+                    return handleScmConfiguration();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             case Constants.SCM_VIEW:
                 try {
-                    return handleScmView(goPluginApiRequest);
+                    return handleScmView();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -64,11 +74,11 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
         return new GoPluginIdentifier("scm", Collections.singletonList("1.0"));
     }
 
-    private GoPluginApiResponse handlePluginSettingsGetConfiguration(GoPluginApiRequest goPluginApiRequest) {
+    private GoPluginApiResponse handlePluginSettingsGetConfiguration() {
         return PluginUtils.getPluginConfiguration(new DefaultGeneralPluginConfigurationView());
     }
 
-    private GoPluginApiResponse handlePluginSettingsGetView(GoPluginApiRequest goPluginApiRequest) throws IOException {
+    private GoPluginApiResponse handlePluginSettingsGetView() throws IOException {
         return getPluginView(new DefaultGeneralPluginConfigurationView());
     }
 
@@ -83,11 +93,11 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
         }
     }
 
-    private GoPluginApiResponse handleScmView(GoPluginApiRequest goPluginApiRequest) throws IOException {
+    private GoPluginApiResponse handleScmView() throws IOException {
         return getPluginView(new DefaultScmConfigurationView());
     }
 
-    private GoPluginApiResponse handleScmConfiguration(GoPluginApiRequest goPluginApiRequest) throws IOException {
+    private GoPluginApiResponse handleScmConfiguration() throws IOException {
         return PluginUtils.getPluginConfiguration(new DefaultScmConfigurationView());
     }
 
