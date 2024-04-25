@@ -36,24 +36,18 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
                 .AddExecutor(Constants.GET_SCM_CONFIGURATION, new ScmConfigurationExecutor())
                 .AddExecutor(Constants.GET_PLUGIN_VIEW, new PluginViewExecutor())
                 .AddExecutor(Constants.GET_SCM_VIEW, new ScmViewExecutor())
+                .AddExecutor(Constants.VALIDATE_PLUGIN_CONFIGURATION, new PluginValidationExecutor())
                 .build();
     }
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) throws UnhandledRequestTypeException {
         LOGGER.info("Api request type : "  + goPluginApiRequest.requestName());
-        switch (goPluginApiRequest.requestName()) {
-            case Constants.GET_PLUGIN_CONFIGURATION:
-            case Constants.GET_SCM_CONFIGURATION:
-            case Constants.GET_PLUGIN_VIEW:
-            case Constants.GET_SCM_VIEW:
-                try {
-                    return this.executorFactory.Execute(goPluginApiRequest);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+        try {
+            return this.executorFactory.Execute(goPluginApiRequest);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return renderJSON(200, null);
     }
 
     @Override

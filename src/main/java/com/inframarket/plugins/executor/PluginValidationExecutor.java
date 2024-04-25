@@ -7,7 +7,7 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
 import java.io.IOException;
 
-public class PluginViewExecutor extends AbstractBaseExecutor {
+public class PluginValidationExecutor extends AbstractBaseExecutor {
     public GoPluginApiResponse Execute(GoPluginApiRequest apiRequest) throws IOException {
         this.logger.info("Successfully reached " + this.getClass());
         return PluginUtils.getPluginView(new DefaultGeneralPluginConfigurationView());

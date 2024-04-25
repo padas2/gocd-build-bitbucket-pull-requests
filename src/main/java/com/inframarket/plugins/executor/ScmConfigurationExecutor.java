@@ -2,14 +2,12 @@ package com.inframarket.plugins.executor;
 
 import com.inframarket.plugins.utils.PluginUtils;
 import com.inframarket.plugins.views.DefaultScmConfigurationView;
-import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
-public class ScmConfigurationExecutor implements Executor {
-    private static final Logger LOGGER = Logger.getLoggerFor(ScmConfigurationExecutor.class);
+public class ScmConfigurationExecutor extends AbstractBaseExecutor {
     public GoPluginApiResponse Execute(GoPluginApiRequest apiRequest) {
-        LOGGER.info("Successfully reached ScmConfigurationExecutor.class");
+        this.logger.info("Successfully reached " + this.getClass());
         return PluginUtils.getPluginConfiguration(new DefaultScmConfigurationView());
     }
 }
