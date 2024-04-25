@@ -1,11 +1,11 @@
-package com.inframarket.plugins.executor;
+package com.inframarket.plugins.handler;
 
 import com.thoughtworks.go.plugin.api.logging.Logger;
 
-public abstract class AbstractBaseExecutor implements Executor {
+public abstract class AbstractBaseHandler implements Handler {
     protected Logger logger;
 
-    protected AbstractBaseExecutor() {
+    protected AbstractBaseHandler() {
         logger = Logger.getLoggerFor(this.getClass());
     }
 }

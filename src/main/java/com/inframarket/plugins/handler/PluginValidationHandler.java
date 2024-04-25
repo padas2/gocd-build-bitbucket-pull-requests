@@ -1,15 +1,15 @@
-package com.inframarket.plugins.executor;
+package com.inframarket.plugins.handler;
 
-import com.inframarket.plugins.utils.PluginUtils;
-import com.inframarket.plugins.views.DefaultGeneralPluginConfigurationView;
+import com.inframarket.plugins.utils.GocdUtils;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
 import java.io.IOException;
+import java.util.Collections;
 
-public class PluginValidationExecutor extends AbstractBaseExecutor {
+public class PluginValidationHandler extends AbstractBaseHandler {
     public GoPluginApiResponse Execute(GoPluginApiRequest apiRequest) throws IOException {
         this.logger.info("Successfully reached " + this.getClass());
-        return PluginUtils.getPluginView(new DefaultGeneralPluginConfigurationView());
+        return GocdUtils.renderJSON(200, Collections.EMPTY_LIST);
     }
 }
