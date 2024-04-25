@@ -15,7 +15,7 @@ public class ExecutorFactory {
         this.executorRegistry = builder.executorRegistry;
     }
 
-    public GoPluginApiResponse Execute(GoPluginApiRequest apiRequest) throws UnhandledRequestTypeException {
+    public GoPluginApiResponse Execute(GoPluginApiRequest apiRequest) throws UnhandledRequestTypeException, Exception {
         Optional<Executor> executor = Optional.ofNullable(this.executorRegistry.get(apiRequest.requestName()));
         if (!executor.isPresent()) {
             throw new UnhandledRequestTypeException(apiRequest.requestName());

@@ -2,7 +2,7 @@ package com.inframarket.plugins.utils;
 
 import com.google.gson.GsonBuilder;
 
-public class JSONUtils {
+public class JsonUtils {
     public static Object fromJSON(String json) {
         return new GsonBuilder().create().fromJson(json, Object.class);
     }

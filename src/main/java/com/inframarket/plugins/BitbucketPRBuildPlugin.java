@@ -1,11 +1,7 @@
 package com.inframarket.plugins;
 
-import com.inframarket.plugins.executor.ExecutorFactory;
-import com.inframarket.plugins.executor.PluginConfigurationExecutor;
-import com.inframarket.plugins.executor.ScmConfigurationExecutor;
-import com.inframarket.plugins.utils.PluginUtils;
+import com.inframarket.plugins.executor.*;
 import com.inframarket.plugins.views.ConfigurationView;
-import com.inframarket.plugins.views.DefaultGeneralPluginConfigurationView;
 import com.inframarket.plugins.views.DefaultScmConfigurationView;
 import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
 import com.thoughtworks.go.plugin.api.GoPlugin;
@@ -38,6 +34,8 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
                 .ExecutorFactoryBuilder()
                 .AddExecutor(Constants.GET_PLUGIN_CONFIGURATION, new PluginConfigurationExecutor())
                 .AddExecutor(Constants.GET_SCM_CONFIGURATION, new ScmConfigurationExecutor())
+                .AddExecutor(Constants.GET_PLUGIN_VIEW, new PluginViewExecutor())
+                .AddExecutor(Constants.GET_SCM_VIEW, new ScmViewExecutor())
                 .build();
     }
 
@@ -47,17 +45,11 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
         switch (goPluginApiRequest.requestName()) {
             case Constants.GET_PLUGIN_CONFIGURATION:
             case Constants.GET_SCM_CONFIGURATION:
-                return this.executorFactory.Execute(goPluginApiRequest);
             case Constants.GET_PLUGIN_VIEW:
+            case Constants.GET_SCM_VIEW:
                 try {
-                    return handlePluginSettingsGetView();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            case Constants.SCM_VIEW:
-                try {
-                    return handleScmView();
-                } catch (IOException e) {
+                    return this.executorFactory.Execute(goPluginApiRequest);
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
         }
@@ -67,36 +59,5 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
     @Override
     public GoPluginIdentifier pluginIdentifier() {
         return new GoPluginIdentifier("scm", Collections.singletonList("1.0"));
-    }
-
-    private GoPluginApiResponse handlePluginSettingsGetConfiguration() {
-        return PluginUtils.getPluginConfiguration(new DefaultGeneralPluginConfigurationView());
-    }
-
-    private GoPluginApiResponse handlePluginSettingsGetView() throws IOException {
-        return getPluginView(new DefaultGeneralPluginConfigurationView());
-    }
-
-    private GoPluginApiResponse getPluginView(ConfigurationView view) throws IOException {
-        if (view.hasConfigurationView()) {
-            Map<String, Object> response = new HashMap<String, Object>();
-            response.put("displayValue", "bitbucket");
-            response.put("template", getFileContents(view.templateName()));
-            return renderJSON(200, response);
-        } else {
-            return renderJSON(404, null);
-        }
-    }
-
-    private GoPluginApiResponse handleScmView() throws IOException {
-        return getPluginView(new DefaultScmConfigurationView());
-    }
-
-    private GoPluginApiResponse handleScmConfiguration() throws IOException {
-        return PluginUtils.getPluginConfiguration(new DefaultScmConfigurationView());
-    }
-
-    private String getFileContents(String filePath) throws IOException {
-        return IOUtils.toString(getClass().getResourceAsStream(filePath), "UTF-8");
     }
 }

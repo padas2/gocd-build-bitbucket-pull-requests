@@ -14,6 +14,6 @@ public class DefaultGeneralPluginConfigurationView implements ConfigurationView 
     }
 
     public boolean hasConfigurationView() {
-        return false;
+        return true;
     }
 }

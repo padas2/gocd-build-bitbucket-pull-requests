@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class GocdUtils {
     public static GoPluginApiResponse renderJSON(final int responseCode, Object response) {
-        final String json = response == null ? null : JSONUtils.toJSON(response);
+        final String json = response == null ? null : JsonUtils.toJSON(response);
         return new GoPluginApiResponse() {
             @Override
             public int responseCode() {
