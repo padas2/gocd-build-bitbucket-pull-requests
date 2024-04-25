@@ -16,12 +16,12 @@ public class RequestHandler {
     }
 
     public GoPluginApiResponse Handle(GoPluginApiRequest apiRequest) throws UnhandledRequestTypeException, Exception {
-        Optional<Handler> executor = Optional.ofNullable(this.handlerRegistry.get(apiRequest.requestName()));
-        if (!executor.isPresent()) {
+        Optional<Handler> optionalHandler = Optional.ofNullable(this.handlerRegistry.get(apiRequest.requestName()));
+        if (!optionalHandler.isPresent()) {
             throw new UnhandledRequestTypeException(apiRequest.requestName());
         }
 
-        return executor.get().Execute(apiRequest);
+        return optionalHandler.get().Handle(apiRequest);
     }
 
     public static class Builder {

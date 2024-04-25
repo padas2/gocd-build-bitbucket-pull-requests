@@ -1,6 +1,12 @@
 package com.inframarket.plugins;
 
 import com.inframarket.plugins.handler.*;
+import com.inframarket.plugins.handler.plugin.PluginConfigurationHandler;
+import com.inframarket.plugins.handler.plugin.PluginValidationHandler;
+import com.inframarket.plugins.handler.plugin.PluginViewHandler;
+import com.inframarket.plugins.handler.scm.ScmConfigurationHandler;
+import com.inframarket.plugins.handler.scm.ScmValidationHandler;
+import com.inframarket.plugins.handler.scm.ScmViewHandler;
 import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
 import com.thoughtworks.go.plugin.api.GoPlugin;
 import com.thoughtworks.go.plugin.api.GoPluginIdentifier;
