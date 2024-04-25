@@ -5,6 +5,7 @@ import com.inframarket.plugins.handler.plugin.PluginConfigurationHandler;
 import com.inframarket.plugins.handler.plugin.PluginValidationHandler;
 import com.inframarket.plugins.handler.plugin.PluginViewHandler;
 import com.inframarket.plugins.handler.scm.ScmConfigurationHandler;
+import com.inframarket.plugins.handler.scm.ScmConnectionCheckHandler;
 import com.inframarket.plugins.handler.scm.ScmValidationHandler;
 import com.inframarket.plugins.handler.scm.ScmViewHandler;
 import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
@@ -35,6 +36,7 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
                 .AddHandler(Constants.GET_SCM_VIEW, new ScmViewHandler())
                 .AddHandler(Constants.VALIDATE_PLUGIN_CONFIGURATION, new PluginValidationHandler())
                 .AddHandler(Constants.VALIDATE_SCM_CONFIGURATION, new ScmValidationHandler())
+                .AddHandler(Constants.CHECK_SCM_CONNECTION, new ScmConnectionCheckHandler())
                 .build();
     }
 
