@@ -2,6 +2,7 @@ package com.inframarket.plugins;
 
 import com.inframarket.plugins.executor.ExecutorFactory;
 import com.inframarket.plugins.executor.PluginConfigurationExecutor;
+import com.inframarket.plugins.executor.ScmConfigurationExecutor;
 import com.inframarket.plugins.utils.PluginUtils;
 import com.inframarket.plugins.views.ConfigurationView;
 import com.inframarket.plugins.views.DefaultGeneralPluginConfigurationView;
@@ -36,6 +37,7 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
         this.executorFactory = new ExecutorFactory
                 .ExecutorFactoryBuilder()
                 .AddExecutor(Constants.GET_PLUGIN_CONFIGURATION, new PluginConfigurationExecutor())
+                .AddExecutor(Constants.GET_SCM_CONFIGURATION, new ScmConfigurationExecutor())
                 .build();
     }
 
@@ -43,19 +45,12 @@ public class BitbucketPRBuildPlugin implements GoPlugin {
     public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) throws UnhandledRequestTypeException {
         LOGGER.info("Api request type : "  + goPluginApiRequest.requestName());
         switch (goPluginApiRequest.requestName()) {
-//            case Constants.GET_PLUGIN_CONFIGURATION:
-//                return handlePluginSettingsGetConfiguration();
             case Constants.GET_PLUGIN_CONFIGURATION:
+            case Constants.GET_SCM_CONFIGURATION:
                 return this.executorFactory.Execute(goPluginApiRequest);
             case Constants.GET_PLUGIN_VIEW:
                 try {
                     return handlePluginSettingsGetView();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            case Constants.SCM_CONFIGURATION:
-                try {
-                    return handleScmConfiguration();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
