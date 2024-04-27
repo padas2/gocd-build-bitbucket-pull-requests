@@ -28,17 +28,21 @@ public class ScmValidationHandler extends AbstractBaseHandler {
         this.logger.info("Git url : " + gitConfig.getUrl());
 
         // Perform validations and prepare responseMap
+        // Not injecting response map into the responseList as an empty response is getting injected. which is causing failure during saving SCM.
+        // TODO:
+        // 1. Add/increase logging levels in GOCD server main code base.
+        // 2. Investigate why this adding of responseMap is causing an error while saving SCM.
         Map<String, Object> responseMap = new HashMap<String, Object>();
         if (StringUtil.isEmpty(gitConfig.getUrl())) {
             responseMap.put("key", "url");
-            responseMap.put("message", "URL is a required field");
+            responseMap.put("message", "URL is not a required field");
         } else if (!UrlUtils.isValidURL(gitConfig.getUrl())) {
             responseMap.put("key", "url");
             responseMap.put("message", "Invalid URL");
         }
 
         List<Map<String, Object>> responseList = new ArrayList<Map<String, Object>>();
-        responseList.add(responseMap);
+        this.logger.info("Final response : " + responseList);
         return GocdUtils.renderJSON(200, responseList);
     }
 }
